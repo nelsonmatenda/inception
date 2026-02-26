@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 : "${MYSQL_DB:?$MYSQL_DB NOT DEFINED}"
 : "${MYSQL_USER:?$MYSQL_USER NOT DEFINED}"
@@ -32,6 +32,6 @@ if [ ! -f "$VOL_DIR/wp-config.php" ]; then
 	wp --allow-root create "$WP_USER_LOGIN" "$WP_USER_EMAIL" \
 		--role="$WP_USER_ROLE" \
 		--user_pass="$WP_USER_PASS"
-fi 
+fi
 
 exec /usr/sbin/php-fpm83 -F
