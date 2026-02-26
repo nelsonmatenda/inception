@@ -46,4 +46,14 @@ networks:
 
 volumes:
 	db_volume:
+		driver: local
+		driver_opts:
+			type: none
+			o: bind
+			device: /home/nfigueir/data/db
 	wp_volume:
+		driver: local
+		driver_opts:
+			type: none
+			o: bind
+			device: /home/nfigueir/data/wp
