@@ -18,7 +18,7 @@ VOL_DIR=/var/www/wordpress
 cd $VOL_DIR
 if [ ! -f "$VOL_DIR/wp-config.php" ]; then
 	sleep_time=1
-	until wp db check --allow-root >/dev/null 2>&1; do
+	while ! php83 -r "mysqli_report(MYSQLI_REPORT_OFF); \$mysqli = new mysqli('$MYSQL_HOST', '$MYSQL_USER', '$MYSQL_PWD', '$MYSQL_DB'); if (\$mysqli->connect_error) exit(1); \$mysqli->close();" >/dev/null 2>&1; do
 		echo "⏳ Wait for DB.."
 		sleep $sleep_time
 		sleep_time=$(( sleep_time * 2 ))
