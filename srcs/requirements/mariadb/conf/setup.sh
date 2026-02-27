@@ -46,7 +46,7 @@ EOF
 [ -n "$pid" ] && wait $pid
 
 echo "✅ MariaDB inicializado com sucesso!"
-
+cat /etc/my.cnf.d/mariadb-server.cnf
 exec mariadbd --user=mysql \
 			--datadir="$DATA_DIR" \
 			--bind-address=0.0.0.0 \

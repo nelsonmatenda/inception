@@ -37,7 +37,7 @@ if [ ! -f "$VOL_DIR/wp-config.php" ]; then
     		--admin_user=$WP_ADM \
     		--admin_password=$WP_ADM_PASS \
     		--admin_email=$WP_ADM_EMAIL
-	wp --allow-root create "$WP_USER_LOGIN" "$WP_USER_EMAIL" \
+	wp --allow-root user create "$WP_USER_LOGIN" "$WP_USER_EMAIL" \
 		--role="$WP_USER_ROLE" \
 		--user_pass="$WP_USER_PASS"
 fi
