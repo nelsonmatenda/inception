@@ -15,8 +15,16 @@
 : "${WP_USER_PASS:$WP_USER_PASS NOT DEFINED}"
 
 VOL_DIR=/var/www/wordpress
+cd $VOL_DIR
 if [ ! -f "$VOL_DIR/wp-config.php" ]; then
-	cd /var/www/wordpress
+	sleep_time=1
+	until mariadb-admin -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PWD ping >/dev/null 2>&1; do
+		echo "⏳ Wait for DB.."
+		sleep $sleep_time
+		sleep_time=$(( sleep_time * 2 ))
+		if [ $sleep_time -gt 16 ]; then sleep_time=16; fi
+	done
+
 	wp --allow-root core download
 	wp --allow-root config create \
 		--dbname=$MYSQL_DB \
@@ -34,4 +42,5 @@ if [ ! -f "$VOL_DIR/wp-config.php" ]; then
 		--user_pass="$WP_USER_PASS"
 fi
 
+chown -R nobody:nobody /var/www/wordpress
 exec /usr/sbin/php-fpm83 -F
