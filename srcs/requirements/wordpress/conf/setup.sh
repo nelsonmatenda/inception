@@ -26,19 +26,19 @@ if [ ! -f "$VOL_DIR/wp-config.php" ]; then
 		if [ $sleep_time -gt 16 ]; then sleep_time=16; fi
 	done
 
-	wp -d memory_limit=256M --allow-root core download
-	wp -d memory_limit=256M --allow-root config create \
+	php83 -d memory_limit=256M /usr/local/bin/wp --allow-root core download
+	php83 -d memory_limit=256M /usr/local/bin/wp --allow-root config create \
 		--dbname=$MYSQL_DB \
 		--dbuser=$MYSQL_USER \
 		--dbpass=$MYSQL_PWD \
 		--dbhost=$MYSQL_HOST
-	wp -d memory_limit=256M --allow-root core install \
+	php83 -d memory_limit=256M /usr/local/bin/wp --allow-root core install \
     		--url=$DOMAIN_NAME \
     		--title=$TITLE \
     		--admin_user=$WP_ADM \
     		--admin_password=$WP_ADM_PASS \
     		--admin_email=$WP_ADM_EMAIL
-	wp -d memory_limit=256M --allow-root user create "$WP_USER_LOGIN" "$WP_USER_EMAIL" \
+	php83 -d memory_limit=256M /usr/local/bin/wp --allow-root user create "$WP_USER_LOGIN" "$WP_USER_EMAIL" \
 		--role="$WP_USER_ROLE" \
 		--user_pass="$WP_USER_PASS"
 fi
