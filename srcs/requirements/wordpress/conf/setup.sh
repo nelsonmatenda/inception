@@ -18,7 +18,7 @@ VOL_DIR=/var/www/wordpress
 cd $VOL_DIR
 if [ ! -f "$VOL_DIR/wp-config.php" ]; then
 	sleep_time=1
-	until mariadb-admin -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PWD ping >/dev/null 2>&1; do
+	until wp db check --allow-root >/dev/null 2>&1; do
 		echo "⏳ Wait for DB.."
 		sleep $sleep_time
 		sleep_time=$(( sleep_time * 2 ))
