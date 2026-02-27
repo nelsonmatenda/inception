@@ -1,5 +1,7 @@
 FROM alpine:3.22
 
+COPY conf/setup.sh /usr/local/bin/setup.sh
+
 RUN apk add --no-cache \
 	php83=8.3.29-r0 \
 	php83-fpm=8.3.29-r0 \
@@ -17,4 +19,5 @@ RUN apk add --no-cache \
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
    	chmod +x wp-cli.phar && \
    	mv wp-cli.phar /usr/local/bin/wp && \
-	sed -i 's|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g' /etc/php83/php-fpm.d/www.conf
+	sed -i 's|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g' /etc/php83/php-fpm.d/www.conf \
+	chmod +x /usr/local/bin/setup.sh

@@ -29,7 +29,7 @@ done
 
 PWD=${MYSQL_PWD//\'/\'\\\'\'}
 ROOT_PWD=${MYSQL_ROOT_PWD//\'/\'\\\'\'}
-ls -la /run/mysqld/
+
 mariadb -h localhost --protocol=SOCKET --socket=/run/mysqld/mysqld.sock <<EOF
 CREATE DATABASE IF NOT EXISTS \`$MYSQL_DB\`;
 
