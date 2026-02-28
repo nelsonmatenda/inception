@@ -11,6 +11,9 @@ services:
       - inception
     volumes:
       - db_volume:/var/lib/mysql
+    secrets:
+      - db_root_pwd
+      - db_user_pwd
 
   wordpress:
     build:
@@ -26,6 +29,10 @@ services:
       - inception
     depends_on:
       - mariadb
+    secrets:
+      - db_user_pwd
+      - wp_adm_pwd
+      - wp_user_pwd
 
   nginx:
     build:
@@ -60,3 +67,13 @@ volumes:
       type: none
       o: bind
       device: /home/nfigueir/data/wp
+
+secrets:
+  db_root_pwd:
+    file : ../secrets/db_root_pwd
+  db_user_pwd:
+    file : ../secrets/db_user_pwd
+  wp_adm_pwd:
+    file : ../secrets/wp_adm_pwd
+  wp_user_pwd:
+    file : ../secrets/wp_user_pwd

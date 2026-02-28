@@ -12,8 +12,8 @@ build:
 	@echo "🏗️ A construir as imagens Docker..."
 	@mkdir -p /home/nfigueir/data/wp
 	@mkdir -p /home/nfigueir/data/db
-	@sudo chmod 777 /home/nfigueir/data/wp
-	@sudo chmod 777 /home/nfigueir/data/db
+	@chmod 777 /home/nfigueir/data/wp
+	@chmod 777 /home/nfigueir/data/db
 	docker compose -f $(COMPOSE_FILE) build
 
 stop:

@@ -1,4 +1,12 @@
 #!/bin/sh
+set -e
+
+secrets() {
+	cat "/run/secrets/$1"
+}
+
+MYSQL_PWD=$(secrets db_user_pwd)
+MYSQL_ROOT_PWD=$(secrets db_root_pwd)
 
 : "${MYSQL_DB:?$MYSQL_DB NOT DEFINED}"
 : "${MYSQL_USER:?$MYSQL_USER NOT DEFINED}"

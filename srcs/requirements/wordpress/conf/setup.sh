@@ -1,6 +1,14 @@
 #! /bin/sh
 set -e
 
+secrets() {
+	cat "/run/secrets/$1"
+}
+
+MYSQL_PWD=$(secrets db_user_pwd)
+WP_ADM_PASS=$(secrets wp_adm_pwd)
+WP_USER_PASS=$(secrets wp_user_pwd)
+
 : "${MYSQL_DB:?$MYSQL_DB NOT DEFINED}"
 : "${MYSQL_USER:?$MYSQL_USER NOT DEFINED}"
 : "${MYSQL_PWD:?$MYSQL_PWD NOT DEFINED}"
