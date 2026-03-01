@@ -3,7 +3,7 @@ services:
     build:
       context: requirements/mariadb
       dockerfile: Dockerfile
-    image: inception-mariadb
+    image: inception-mariadb:1.0.0
     restart: unless-stopped
     env_file:
       - .env
@@ -19,7 +19,7 @@ services:
     build:
       context: requirements/wordpress
       dockerfile: Dockerfile
-    image: inception-wordpress
+    image: inception-wordpress:1.0.0
     restart: unless-stopped
     env_file:
       - .env
@@ -38,7 +38,7 @@ services:
     build:
       context: requirements/nginx
       dockerfile: Dockerfile
-    image: inception-nginx
+    image: inception-nginx:1.0.0
     restart: unless-stopped
     ports:
       - "443:443"
