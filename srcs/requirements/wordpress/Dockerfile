@@ -25,3 +25,4 @@ RUN	chmod +x /usr/local/bin/setup.sh
 
 WORKDIR /var/www/wordpress
 ENTRYPOINT ["/usr/local/bin/setup.sh"]
+

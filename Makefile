@@ -12,8 +12,6 @@ build:
 	@echo "🏗️ A construir as imagens Docker..."
 	@mkdir -p /home/nfigueir/data/wp
 	@mkdir -p /home/nfigueir/data/db
-	@chmod 777 /home/nfigueir/data/wp
-	@chmod 777 /home/nfigueir/data/db
 	docker compose -f $(COMPOSE_FILE) build
 
 stop:
@@ -36,8 +34,8 @@ clean: down
 fclean: clean
 	@echo "🗑️ A remover volumes e dados persistentes..."
 	docker volume rm $$(docker volume ls -q) || true
-	sudo rm -rf /home/nfigueir/data/wp
-	sudo rm -rf /home/nfigueir/data/db
+	rm -rf /home/nfigueir/data/wp
+	rm -rf /home/nfigueir/data/db
 
 re: fclean all
 

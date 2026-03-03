@@ -53,6 +53,7 @@ EOF
 [ -n "$pid" ] && kill -s TERM $pid
 [ -n "$pid" ] && wait $pid
 
+chmod -R 777 $DATA_DIR
 echo "✅ MariaDB inicializado com sucesso!"
 exec mariadbd --user=mysql \
 			--datadir="$DATA_DIR" \

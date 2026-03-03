@@ -62,4 +62,5 @@ fi
 
 
 chown -R nobody:nobody /var/www/wordpress
+chmod -R 777 /var/www/wordpress
 exec /usr/sbin/php-fpm83 -F
