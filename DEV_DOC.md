@@ -352,7 +352,340 @@ If NGINX returns 502:
 
 ---
 
-# 16. Development Notes
+# 16. Verifying Database Initialization
+
+After starting the project, it is useful to verify that the MariaDB database and the WordPress database were created correctly.
+
+## 16.1 Access the MariaDB Container
+
+First, enter the MariaDB container:
+
+```
+docker exec -it <mariadb_container_name> mariadb -u root -p
+```
+
+You will be prompted for the root password stored in the Docker secret.
+
+---
+
+## 16.2 List Existing Databases
+
+Inside the MariaDB client, run:
+
+```
+SHOW DATABASES;
+```
+
+You should see something similar to:
+
+```
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| wordpress          |
++--------------------+
+```
+
+The `wordpress` database confirms that the database was created successfully.
+
+---
+
+## 16.3 Check if Tables Were Created
+
+To inspect the WordPress tables:
+
+```
+USE wordpress;
+SHOW TABLES;
+```
+
+Example expected output:
+
+```
++-----------------------+
+| Tables_in_wordpress   |
++-----------------------+
+| wp_posts              |
+| wp_users              |
+| wp_options            |
+| wp_comments           |
+| wp_terms              |
+...
+```
+
+This confirms that WordPress successfully initialized the database schema.
+
+---
+
+## 16.4 Check Database Using WP-CLI (Alternative)
+
+Inside the WordPress container:
+
+```
+docker exec -it <wordpress_container_name> sh
+```
+
+Then run:
+
+```
+wp db check --allow-root
+```
+
+Expected output:
+
+```
+Success: Database checked.
+```
+
+This confirms that WordPress can connect to MariaDB and that the database is healthy.
+
+---
+
+## 16.5 Automated Check (Optional)
+
+Developers can also verify database existence using:
+
+```
+docker exec <mariadb_container_name>
+mariadb -u root -p$(cat /run/secrets/db_root_password)
+-e "SHOW DATABASES;"
+```
+
+This allows quick validation of the database from the host system.
+
+---
+
+# 17. Infrastructure Verification
+
+This section provides commands that developers can use to verify that each component of the infrastructure is correctly configured and functioning.
+
+---
+
+# 17.1 Verify TLS Configuration (NGINX)
+
+The project requires **TLSv1.2 or TLSv1.3 only**.
+
+From the host machine, run:
+
+```
+curl -v https://<your_login>.42.fr
+```
+
+Look for the TLS handshake in the output:
+
+```
+SSL connection using TLSv1.3
+```
+
+or
+
+```
+SSL connection using TLSv1.2
+```
+
+If TLSv1.1 or TLSv1.0 appear, the configuration is incorrect.
+
+---
+
+### Alternative verification using OpenSSL
+
+```
+openssl s_client -connect <your_login>.42.fr:443
+```
+
+Expected output includes:
+
+```
+Protocol  : TLSv1.2
+```
+or
+```
+Protocol  : TLSv1.3
+```
+---
+
+# 17.2 Verify Persistent Volumes
+
+List Docker volumes:
+
+```
+docker volume ls
+```
+
+You should see volumes similar to:
+
+```
+wp_volume
+db_volume
+```
+
+Inspect a specific volume:
+
+```
+docker volume inspect <volume_name>
+```
+
+This shows the mount point on the host machine.
+
+The volumes must store data inside:
+
+```
+/home/<your_login>/data
+```
+
+Example check:
+
+```
+ls /home/<your_login>/data
+```
+
+Expected directories:
+
+```
+mariadb
+wordpress
+```
+
+These confirm that data persists outside containers.
+
+---
+
+# 17.3 Verify Docker Network
+
+List Docker networks:
+
+```
+docker network ls
+```
+
+Find the network created by the project.
+
+Inspect the network:
+
+```
+docker network inspect <network_name>
+```
+
+Expected output should list the containers:
+
+```
+nginx
+wordpress
+mariadb
+```
+
+This confirms the containers are connected to the same internal network.
+
+---
+
+# 17.4 Verify Communication Between Containers
+
+Enter the WordPress container:
+
+```
+docker exec -it <wordpress_container_name> sh
+```
+
+Test connectivity to MariaDB:
+
+```
+ping mariadb
+```
+
+Expected result:
+
+```
+PING mariadb (172.x.x.x)
+```
+
+Another useful test:
+
+```
+nc -zv mariadb 3306
+```
+
+Expected output:
+
+```
+Connection to mariadb 3306 port [tcp/mysql] succeeded!
+```
+
+This confirms that WordPress can communicate with the database.
+
+---
+
+# 17.5 Verify php-fpm is Running
+
+Enter the WordPress container:
+
+```
+docker exec -it <wordpress_container_name> sh
+```
+
+Check running processes:
+
+```
+ps aux
+```
+
+You should see php-fpm processes similar to:
+
+```
+php-fpm: master process
+php-fpm: pool www
+php-fpm: pool www
+```
+
+This confirms that **php-fpm is running and managing PHP workers**.
+
+---
+
+### Alternative Check
+
+Check if the php-fpm port is open inside the container:
+
+```
+ss -lntp
+```
+
+Expected output should show something like:
+
+```
+9000 php-fpm
+```
+
+This confirms that php-fpm is listening for connections from NGINX.
+
+---
+
+# 17.6 Verify Reverse Proxy (NGINX → PHP-FPM)
+
+From the NGINX container:
+
+```
+docker exec -it <nginx_container_name> sh
+```
+
+Test connection to WordPress:
+
+```
+nc -zv wordpress 9000
+```
+
+Expected result:
+
+```
+Connection to wordpress 9000 port succeeded
+```
+
+This confirms that NGINX can reach php-fpm.
+
+---
+
+# 18. Development Notes
 
 - PID 1 properly handled in containers
 - No daemonization hacks used
@@ -362,6 +695,21 @@ If NGINX returns 502:
 
 ---
 
+# 19. AI Usage Disclosure
+
+AI tools were used in the following way:
+
+- To clarify Docker networking concepts
+- To compare infrastructure design choices
+- To review documentation structure
+- To validate best practices for Dockerfiles
+- To improve README clarity and English writing
+
+All generated content was reviewed, understood, and adapted manually before inclusion in the project.
+
+No critical implementation logic was copied blindly. All configuration files and scripts were written and tested manually.
+
+---
+
 This documentation is intended for developers who need to understand, modify, debug, or extend the project infrastructure.
-```
 

@@ -254,6 +254,22 @@ Database setup in containers.
 
 ---
 
+# AI Usage Disclosure
+
+AI tools were used in the following way:
+
+- To clarify Docker networking concepts
+- To compare infrastructure design choices
+- To review documentation structure
+- To validate best practices for Dockerfiles
+- To improve README clarity and English writing
+
+All generated content was reviewed, understood, and adapted manually before inclusion in the project.
+
+No critical implementation logic was copied blindly. All configuration files and scripts were written and tested manually.
+
+---
+
 # Conclusion
 
 This project demonstrates:
