@@ -1,9 +1,9 @@
 server {
-	listen 443 ssl;
+	listen ${SSL_PORT} ssl;
 	root /var/www/wordpress;
 	index index.php index.html;
 
-	server_name nfigueir.42.fr;
+	server_name ${DOMAIN_NAME};
 
 	ssl_certificate /etc/nginx/ssl/inception.crt;
 	ssl_certificate_key /etc/nginx/ssl/inception.key;
@@ -11,7 +11,7 @@ server {
 	# lidando com php
 	location ~ \.php$ {
 		try_files $uri =404;
-		fastcgi_pass wordpress:9000;
+		fastcgi_pass wordpress:${WP_PORT};
 		include fastcgi_params;
 		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	}
