@@ -22,6 +22,7 @@ WP_USER_PASS=$(secrets wp_user_pwd)
 : "${WP_USER_LOGIN:?$WP_USER_LOGIN NOT DEFINED}"
 : "${WP_USER_ROLE:?$WP_USER_ROLE NOT DEFINED}"
 : "${WP_USER_PASS:?$WP_USER_PASS NOT DEFINED}"
+: "${SSL_PORT:?$SSL_PORT NOT DEFINED}"
 
 cd /var/www/wordpress
 
@@ -47,7 +48,7 @@ fi
 
 if ! php83 -d memory_limit=256M /usr/local/bin/wp  core is-installed --allow-root --url="$DOMAIN_NAME"; then
 	php83 -d memory_limit=256M /usr/local/bin/wp --allow-root core install \
-			--url="$DOMAIN_NAME" \
+			--url="${DOMAIN_NAME}:${SSL_PORT}" \
 			--title="$TITLE" \
 			--admin_user="$WP_ADM" \
 			--admin_password="$WP_ADM_PASS" \

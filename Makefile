@@ -46,3 +46,20 @@ fclean: clean
 re: fclean all
 
 .PHONY: all build stop down clean fclean re
+# configurações do mariadb
+MYSQL_DB=wordpress
+MYSQL_USER=nfigueir
+MYSQL_HOST=mariadb
+
+
+# configurações do wordpress
+DOMAIN_NAME=nfigueir.42.fr
+TITLE=inception-title
+WP_ADM=inception
+WP_ADM_EMAIL=matendafigueiredo@hotmail.com
+WP_USER_LOGIN=nfigueir
+WP_USER_ROLE=editor
+WP_USER_EMAIL=treyclassper@gmail.com
+WP_PORT=8000
+
+SSL_PORT=5555
